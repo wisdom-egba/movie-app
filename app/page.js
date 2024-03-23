@@ -1,94 +1,75 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import React, { useState } from "react";
+import { FaPlaystation } from "react-icons/fa";
+import { ClipLoader } from "react-spinners";
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+
+  function getStarted(e) {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const user_email = localStorage.getItem("email");
+
+      if (user_email) {
+        window.location.href = "/login";
+      } else {
+        localStorage.setItem("email", email);
+        window.location.href = "/signup";
+      }
+    } catch (error) {
+      console.log("error, user registration failed");
+      console.error(error.message);
+    } finally {
+      setLoading(false);
+      setEmail("");
+    }
+  }
+
+  function handleEmailChange(e) {
+    setEmail(e.target.value);
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
+    <main id="movie-app">
+      <div id="background"></div>
+      <div id="top-nav">
         <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
+          <FaPlaystation color="#ff0000" size={60}></FaPlaystation>
+          <h1 id="brand">Movie App</h1>
+        </div>
+
+        <div>
+          <a className="button" href="/login">
+            Login
           </a>
         </div>
       </div>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div id="hero">
+        <h1>Unlimited movies, TV shows, and more</h1>
+        <p>Watch anywhere. Cancel anytime.</p>
+        <p>
+          Ready to watch? Enter your email to create or restart your membership.
+        </p>
       </div>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div id="get-started">
+        <form onSubmit={getStarted}>
+          <input
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            placeholder="example@gmail.com"
+          ></input>
+          <button type="submit" disabled={loading}>
+            <ClipLoader loading={loading} size={10} color="#fff" /> Get started
+          </button>
+        </form>
       </div>
     </main>
   );
